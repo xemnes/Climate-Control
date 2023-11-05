@@ -1,0 +1,17 @@
+[
+{
+  "modid": "geographicraft",
+  "name": "GeographiCraft",
+  "description": "User config-based controls for geographical features, including land sizes, ocean amounts, climate sizes and incidences, biome sizes and incidences, and mountain chains",
+  "version": "0.8.7",
+  "mcversion": “1.12-1.12.1”,
+  "url": "",
+  "updateUrl": "",
+  "authors": "Zeno410",
+  "credits": "The Forge and FML guys, for making this possible",
+  "logoFile": "",
+  "screenshots": [],
+  "requiredMods": [ "Forge" ],
+  "dependencies": []
+}
+]
