@@ -1,7 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
 
 package climateControl.api;
 
@@ -11,52 +7,56 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 
+/**
+ *
+ * @author Zeno410
+ */
 public class BiomePackageRegistry {
+
     public static BiomePackageRegistry instance;
-    private HashMap<String, BiomePackage> namedPackages = new HashMap();
-    private ArrayList<BiomePackage> orderedPackages = new ArrayList();
-    private ArrayList<Named<BiomeSettings>> settings = new ArrayList();
+
+    private HashMap<String,BiomePackage> namedPackages = new HashMap<String,BiomePackage>();
+    private ArrayList<BiomePackage> orderedPackages  = new ArrayList<BiomePackage>();
+    private ArrayList<Named<BiomeSettings>> settings = new ArrayList<Named<BiomeSettings>>();
     private final File configDirectory;
     private final BiomeConfigManager taggedConfigManager;
 
-    public BiomePackageRegistry(File configDirectory, BiomeConfigManager taggedConfigManager) {
-        this.configDirectory = configDirectory;
+    public BiomePackageRegistry(File configDirectory,BiomeConfigManager taggedConfigManager) {
+        this.configDirectory= configDirectory;
         this.taggedConfigManager = taggedConfigManager;
     }
-
+    
     public final void register(BiomePackage biomePackage) {
-        if (!this.namedPackages.containsKey(new String(biomePackage.configFileName()))) {
-            this.namedPackages.put(biomePackage.configFileName(), biomePackage);
-            this.orderedPackages.add(biomePackage);
-            Named<BiomeSettings> namedSettings = biomePackage.namedBiomeSetting();
-            this.taggedConfigManager.initializeConfig(namedSettings, this.configDirectory);
-            this.settings.add(namedSettings);
+        if (namedPackages.containsKey(new String(biomePackage.configFileName()))) {
+            //throw new BiomePackageAlreadyRegistered(biomePackage.configFileName());
+            return;
         }
+        namedPackages.put(biomePackage.configFileName(),biomePackage);
+        orderedPackages.add(biomePackage);
+        Named<BiomeSettings> namedSettings = biomePackage.namedBiomeSetting();
+        //namedSettings.object.setNativeBiomeIDs(configDirectory);
+        //namedSettings.object.nameDefaultClimates();
+        taggedConfigManager.initializeConfig(namedSettings, configDirectory);
+        settings.add(namedSettings);
     }
 
     public final Collection<Named<BiomeSettings>> biomeSettings() {
-        return this.settings;
+        return settings;
     }
 
     public final Collection<Named<BiomeSettings>> freshBiomeSettings() {
-        Collection<Named<BiomeSettings>> result = new ArrayList();
-        Iterator var2 = this.orderedPackages.iterator();
-
-        while(var2.hasNext()) {
-            BiomePackage biomePackage = (BiomePackage)var2.next();
+        Collection<Named<BiomeSettings>> result = new ArrayList<Named<BiomeSettings>>();
+        for (BiomePackage biomePackage: orderedPackages) {
             result.add(biomePackage.namedBiomeSetting());
         }
-
         return result;
     }
-
+    
     public static class BiomePackageAlreadyRegistered extends RuntimeException {
         private final String name;
-
         public BiomePackageAlreadyRegistered(String name) {
-            super("config file name " + name + " is already registered with Climate Control");
+            super("config file name "+name+" is already registered with Climate Control");
             this.name = name;
         }
     }

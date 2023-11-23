@@ -1,17 +1,16 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
 
 package climateControl;
 
 import java.io.File;
 import net.minecraft.world.WorldServer;
 
-public class DimensionAccess extends MinecraftFilesAccess {
+/**
+ *
+ * @author Zeno410
+ */
+public class DimensionAccess extends MinecraftFilesAccess{
     public final int dimension;
     private final File dimensionDirectory;
-
     public DimensionAccess(int dimension, WorldServer world) {
         this.dimension = dimension;
         this.dimensionDirectory = world.getChunkSaveLocation();
@@ -23,10 +22,11 @@ public class DimensionAccess extends MinecraftFilesAccess {
     }
 
     public File configDirectory() {
-        return new File(this.dimensionDirectory, "worldSpecificConfig");
+        return new File(dimensionDirectory,"worldSpecificConfig");
     }
 
+    @Override
     public File baseDirectory() {
-        return this.dimensionDirectory;
+        return dimensionDirectory;
     }
 }

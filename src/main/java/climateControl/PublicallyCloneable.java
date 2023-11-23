@@ -1,10 +1,9 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package climateControl;
 
+/**
+ *
+ * @author Zeno410
+ */
 public interface PublicallyCloneable<Type> {
-    Type clone();
+    public Type clone();
 }

@@ -1,12 +1,12 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
 
 package climateControl.customGenLayer;
 
 import com.Zeno410Utils.IntRandomizer;
 
+/**
+ *
+ * @author Zeno410
+ */
 public class LandWaterChoices {
     int original;
     boolean isWater;
@@ -19,69 +19,61 @@ public class LandWaterChoices {
     void setOriginal(int original, boolean isWater) {
         this.original = original;
         this.isWater = isWater;
-        this.land.clear();
-        this.water.clear();
+        land.clear();
+        water.clear();
     }
 
     int totalItems() {
-        int result = this.water.size();
-        result += this.land.size();
+        int result = water.size();
+        result += land.size();
         return result;
     }
 
     void add(int value, boolean isAddedWater) {
-        this.item(isAddedWater).add(value);
+        item(isAddedWater).add(value);
     }
 
     boolean equal() {
-        return this.water.size() == 2;
+        return water.size() ==2;
     }
 
     boolean isChoiceWater() {
-        return this.land.size() < 2;
+        return land.size() <2;
     }
 
     UpToFour item(boolean waterItem) {
-        return waterItem ? this.water : this.land;
+        if (waterItem) return water;
+        return land;
     }
 
     int mostCommon(IntRandomizer randomizer) {
-        int oldCount = this.water.count;
-        if (oldCount < 2) {
-            return !this.isWater ? this.original : this.land.items[randomizer.nextInt(this.land.count)];
-        } else if (oldCount == 2) {
-            return this.original;
-        } else {
-            return !this.isWater ? this.water.items[randomizer.nextInt(this.water.count)] : this.original;
+        int oldCount = water.count;
+        // if mostly land return one of the land items
+        if (oldCount <2) {
+            // if original land return it
+            if (!isWater) return original;
+            return land.items[randomizer.nextInt(land.count)];
         }
+        // if tied no change
+        if (oldCount == 2) return original;
+        if (!isWater) return water.items[randomizer.nextInt(water.count)];
+        return original;
     }
 
+
     private class UpToFour {
-        int count;
+        int count = 0;
         int value;
-        int[] items;
-
-        private UpToFour() {
-            this.count = 0;
-            this.items = new int[4];
-        }
-
+        int [] items = new int[4];
         void setValue(int newValue) {
-            this.value = newValue;
-            this.count = 0;
+            value = newValue;
+            count = 0;
         }
-
-        void clear() {
-            this.count = 0;
-        }
-
+        void clear() {count = 0;}
         void add(int added) {
-            this.items[this.count] = added;
-            ++this.count;
+            items[count]=added;
+            count++;
         }
-
-        int size() {
-            return this.count;
-        }
+        int size() {return count;}
     }
 }

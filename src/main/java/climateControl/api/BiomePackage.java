@@ -1,12 +1,12 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
 
 package climateControl.api;
 
 import com.Zeno410Utils.Named;
 
+/**
+ *
+ * @author Zeno410
+ */
 public abstract class BiomePackage {
     private final String configFileName;
 
@@ -15,12 +15,11 @@ public abstract class BiomePackage {
     }
 
     public String configFileName() {
-        return this.configFileName;
+        return configFileName;
     }
-
     public abstract BiomeSettings freshBiomeSetting();
 
     public Named<BiomeSettings> namedBiomeSetting() {
-        return Named.from(this.configFileName, this.freshBiomeSetting());
+        return Named.from(configFileName, freshBiomeSetting());
     }
 }
