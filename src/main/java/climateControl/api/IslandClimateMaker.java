@@ -1,12 +1,16 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
+/*
+ * Available under the Lesser GPL License 3.0
+ */
 
 package climateControl.api;
 
 import com.Zeno410Utils.IntRandomizer;
 
+/**
+ *
+ * @author Zeno410
+ */
 public interface IslandClimateMaker {
-    int climate(int var1, int var2, IntRandomizer var3);
+    public int climate(int x, int z, IntRandomizer randomizer);
+
 }

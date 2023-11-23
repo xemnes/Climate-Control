@@ -1,24 +1,26 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
 
 package climateControl;
 
 import java.io.File;
 
+/**
+ *
+ * @author Zeno410
+ */
 public class GeneralConfigAccess extends MinecraftFilesAccess {
     private final File configDirectory;
-
     public GeneralConfigAccess(File configDirectory) {
         this.configDirectory = configDirectory;
     }
 
+    @Override
     public File baseDirectory() {
-        return this.configDirectory.getParentFile();
+        return configDirectory.getParentFile();
     }
 
+    @Override
     public File configDirectory() {
-        return this.configDirectory;
+        return configDirectory;
     }
+
 }

@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package climateControl.utils;
 
 import climateControl.api.BiomeSettings;
@@ -11,79 +6,79 @@ import com.Zeno410Utils.Settings;
 import com.Zeno410Utils.Zeno410Logger;
 import java.io.File;
 import java.util.logging.Logger;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.config.Configuration;
 
+/**
+ *
+ * @author Zeno410
+ */
+
 public class BiomeConfigManager<Type extends Settings> {
+    //private final String modConfigName;
     private final String groupDirectoryName;
-    public static final String worldSpecificConfigFileName = "worldSpecificConfig";
-    public static Logger logger = (new Zeno410Logger("TaggedConfigManager")).logger();
+    public final static String worldSpecificConfigFileName = "worldSpecificConfig";
+    public static Logger logger = new Zeno410Logger("TaggedConfigManager").logger();
 
     public BiomeConfigManager(String groupDirectoryName) {
+        //this.modConfigName = generalConfigName;
         this.groupDirectoryName = groupDirectoryName;
     }
-
     public void updateConfig(Named<Type> namedSettings, File generalDirectory, File specificDirectory) {
-        Settings settings = (Settings)namedSettings.object;
-        File specificAddOnDirectory = new File(generalDirectory, this.groupDirectoryName);
-        if (!specificAddOnDirectory.exists()) {
-            specificAddOnDirectory.mkdir();
-        }
-
-        File specificAddonFile = new File(specificAddOnDirectory, namedSettings.name);
-        this.readConfigs(specificAddonFile, settings, generalDirectory, true);
-
-        try {
-            BiomeSettings biomeSettings = (BiomeSettings)settings;
-            biomeSettings.setNativeBiomeIDs(generalDirectory);
-        } catch (ClassCastException var8) {
-        }
-
-        if (!specificDirectory.exists()) {
-            specificDirectory.mkdir();
-        }
-
-        if (!specificDirectory.exists()) {
-            throw new RuntimeException("cannot make directory " + specificDirectory.getAbsolutePath());
-        } else {
-            specificAddOnDirectory = new File(specificDirectory, this.groupDirectoryName);
-            if (!specificAddOnDirectory.exists()) {
-                specificAddOnDirectory.mkdir();
-            }
-
-            if (!specificAddOnDirectory.exists()) {
-                throw new RuntimeException(specificAddOnDirectory.getAbsolutePath());
-            } else {
-                specificAddonFile = new File(specificAddOnDirectory, namedSettings.name);
-                this.readConfigs(specificAddonFile, settings, generalDirectory, false);
+        Settings settings = namedSettings.object;
+        { // block to localize vars
+            //File generalModFile = new File(generalDirectory,modConfigName);
+            File generalAddOnDirectory = new File(generalDirectory,groupDirectoryName);
+            if (!generalAddOnDirectory.exists()) generalAddOnDirectory.mkdir();
+            File generalAddonFile = new File(generalAddOnDirectory,namedSettings.name);
+            readConfigs(generalAddonFile,settings,generalDirectory,true);
+            // nativise IDS
+            try {
+                BiomeSettings biomeSettings = (BiomeSettings)settings;
+                //biomeSettings.stripFrom(general);
+                biomeSettings.setNativeBiomeIDs(generalDirectory);
+            } catch (ClassCastException ex) {
+                // not Biome Settings
             }
         }
+
+        //File specificModFile = new File(specificDirectory,modConfigName);
+        if (!specificDirectory.exists()) specificDirectory.mkdir();
+        if (!specificDirectory.exists()) throw new RuntimeException("cannot make directory "+specificDirectory.getAbsolutePath());
+        File specificAddOnDirectory = new File(specificDirectory,groupDirectoryName);
+        if (!specificAddOnDirectory.exists()) specificAddOnDirectory.mkdir();
+        if (!specificAddOnDirectory.exists()) throw new RuntimeException(specificAddOnDirectory.getAbsolutePath());
+        File specificAddonFile = new File(specificAddOnDirectory,namedSettings.name);
+        readConfigs(specificAddonFile,settings,generalDirectory,false);
+
     }
 
     public void initializeConfig(Named<Type> namedSettings, File generalDirectory) {
-        Settings settings = (Settings)namedSettings.object;
-        File generalAddOnDirectory = new File(generalDirectory, this.groupDirectoryName);
-        File generalAddonFile = new File(generalAddOnDirectory, namedSettings.name);
-        this.readConfigs(generalAddonFile, settings, generalDirectory, true);
-
+        Settings settings = namedSettings.object;
+        //File generalModFile = new File(generalDirectory,modConfigName);
+        File generalAddOnDirectory = new File(generalDirectory,groupDirectoryName);
+        File generalAddonFile = new File(generalAddOnDirectory,namedSettings.name);
+        readConfigs(generalAddonFile,settings,generalDirectory,true);
+        // taking out the IDs from the general addon File - they don't do anything
         try {
-            BiomeSettings biomeSettings = (BiomeSettings)settings;
-            Configuration sample = new Configuration(generalAddonFile);
+            BiomeSettings biomeSettings = (BiomeSettings) settings;
+            Configuration sample = new Configuration(generalAddonFile);// assured to exist now
             biomeSettings.stripIDsFrom(sample);
             sample.save();
             biomeSettings.setNativeBiomeIDs(generalDirectory);
-        } catch (ClassCastException var8) {
+        }catch (ClassCastException e) {
+            // not a biome settings
         }
-
     }
 
-    private void readConfigs(File specificFile, Settings settings, File generalDirectory, boolean isGeneral) {
+    private void readConfigs(File specificFile, Settings settings, File generalDirectory,boolean isGeneral) {
         Configuration specific = null;
-
         try {
-            settings.readForeignConfigs(generalDirectory);
-        } catch (ClassCastException var8) {
-        }
+              settings.readForeignConfigs(generalDirectory);
 
+        } catch (ClassCastException e) {
+            // not a biome settings
+        }
         if (specificFile.exists()) {
             specific = new Configuration(specificFile);
             settings.readFrom(specific);
@@ -91,52 +86,55 @@ public class BiomeConfigManager<Type extends Settings> {
             specific = new Configuration(specificFile);
             settings.copyTo(specific);
         }
-
         settings.copyTo(specific);
-
-        try {
-            BiomeSettings biomeSettings = (BiomeSettings)settings;
-            if (isGeneral) {
-                biomeSettings.stripIDsFrom(specific);
-            }
-        } catch (ClassCastException var7) {
-        }
-
+        try{
+            BiomeSettings biomeSettings = (BiomeSettings) settings;
+            if (isGeneral) biomeSettings.stripIDsFrom(specific);
+        }catch (ClassCastException ex) {
+                    // not Biome Settings
+                }
+                //se
         specific.save();
     }
 
     public void saveConfigs(File generalDirectory, File specificDirectory, Named<Settings> namedSettings) {
-        if (!specificDirectory.exists()) {
-            specificDirectory.mkdir();
-        }
+        /*File specificModFile = new File(specificDirectory,modConfigName);
 
-        if (!specificDirectory.exists()) {
-            throw new RuntimeException("cannot make directory " + specificDirectory.getAbsolutePath());
-        } else {
-            File specificAddOnDirectory = new File(specificDirectory, this.groupDirectoryName);
-            if (!specificAddOnDirectory.exists()) {
-                specificAddOnDirectory.mkdir();
-            }
-
-            if (!specificAddOnDirectory.exists()) {
-                throw new RuntimeException("cannot make directory " + specificAddOnDirectory.getAbsolutePath());
-            } else {
-                File specificAddonFile = new File(specificAddOnDirectory, namedSettings.name);
-                Configuration specific = new Configuration(specificAddonFile);
-                ((Settings)namedSettings.object).copyTo(specific);
-
+                Configuration general = new Configuration(specificModFile);
+                // we are no longer retrieving old config data
+                // using this to clean up stuff that should not be there and is confusing users
+                //settings.readFrom(new Configuration(generalFile));
                 try {
                     BiomeSettings biomeSettings = (BiomeSettings)namedSettings.object;
-                    biomeSettings.setNativeBiomeIDs(generalDirectory);
-                } catch (ClassCastException var8) {
+                    //biomeSettings.stripFrom(general);
+                } catch (ClassCastException ex) {
+                    // not Biome Settings
                 }
+                //settings.copyTo(general);
+                general.save();
+        */
+        if (!specificDirectory.exists()) specificDirectory.mkdir();
+        if (!specificDirectory.exists()) throw new RuntimeException("cannot make directory "+specificDirectory.getAbsolutePath());
+        File specificAddOnDirectory = new File(specificDirectory,groupDirectoryName);
+        if (!specificAddOnDirectory.exists()) specificAddOnDirectory.mkdir();
+        if (!specificAddOnDirectory.exists()) throw new RuntimeException("cannot make directory "+specificAddOnDirectory.getAbsolutePath());
+        File specificAddonFile = new File(specificAddOnDirectory,namedSettings.name);
+        Configuration specific = new Configuration(specificAddonFile);
+        namedSettings.object.copyTo(specific);
+        try {
+            BiomeSettings biomeSettings = (BiomeSettings)namedSettings.object;
+            // presently only called from dimensions
+            biomeSettings.setNativeBiomeIDs(generalDirectory);
+            //biomeSettings.stripIDsFrom(specific);
 
-                specific.save();
-            }
-        }
+        }catch (ClassCastException ex) {
+                    // not Biome Settings
+                }
+        specific.save();
     }
 
     private boolean usable(File tested) {
         return tested != null;
     }
+
 }

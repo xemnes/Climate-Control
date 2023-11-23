@@ -1,27 +1,21 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
 
 package climateControl.api;
 
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import net.minecraftforge.event.world.WorldEvent;
 
-public abstract class DimensionalSettingsModifier {
-    public DimensionalSettingsModifier() {
-    }
+/**
+ *
+ * @author Zeno410
+ */
+abstract public class DimensionalSettingsModifier {
 
-    public abstract boolean signalCCActive(int var1);
+    abstract public boolean signalCCActive(int dimension);
+    abstract public void modify(int dimension, ClimateControlSettings settings);
+    abstract public void onWorldLoad(WorldEvent.Load event);
+    abstract public void unloadWorld(WorldEvent.Unload event);
+    abstract public void serverStarted(FMLServerStartedEvent event);
+    abstract public void serverStopped(FMLServerStoppedEvent event);
 
-    public abstract void modify(int var1, ClimateControlSettings var2);
-
-    public abstract void onWorldLoad(WorldEvent.Load var1);
-
-    public abstract void unloadWorld(WorldEvent.Unload var1);
-
-    public abstract void serverStarted(FMLServerStartedEvent var1);
-
-    public abstract void serverStopped(FMLServerStoppedEvent var1);
 }

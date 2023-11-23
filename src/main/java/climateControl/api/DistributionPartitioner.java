@@ -1,7 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
 
 package climateControl.api;
 
@@ -10,17 +6,20 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.WeakHashMap;
 
+/**
+ * This class can partition an arbitrary biome distributions into sub-distributions
+ * Uses are mountain/lowlands, wet/moist/arid, etc.
+ * @author Zeno410
+ */
 public abstract class DistributionPartitioner {
-    private static HashMap<String, DistributionPartitioner> registered = new HashMap();
-    protected final ArrayList<IncidenceModifier> modifiers;
-    private WeakHashMap<BiomeRandomizer.PickByClimate, HashMap<IncidenceModifier, BiomeRandomizer.PickByClimate>> calculatedClimates = new WeakHashMap();
 
+    private static HashMap<String,DistributionPartitioner> registered =
+            new HashMap<String,DistributionPartitioner>();
     public static void register(String name, DistributionPartitioner partitioner) {
         if (registered.containsKey(name)) {
-            throw new RuntimeException("Partitioner " + name + " already registered");
-        } else {
-            registered.put(name, partitioner);
+            throw new RuntimeException("Partitioner "+name+ " already registered");
         }
+        registered.put(name, partitioner);
     }
 
     public static Collection<DistributionPartitioner> registeredPartitioners() {
@@ -31,21 +30,36 @@ public abstract class DistributionPartitioner {
         registered.remove(name);
     }
 
-    protected abstract IncidenceModifier modifier(int var1, int var2);
+    protected final ArrayList<IncidenceModifier> modifiers;
+
+    // um, wow...
+    private WeakHashMap<BiomeRandomizer.PickByClimate,
+            HashMap<IncidenceModifier,BiomeRandomizer.PickByClimate>>
+            calculatedClimates = new
+            WeakHashMap<BiomeRandomizer.PickByClimate,
+            HashMap<IncidenceModifier,BiomeRandomizer.PickByClimate>>();
+
+    protected abstract IncidenceModifier modifier(int x, int z);
 
     public DistributionPartitioner(ArrayList<IncidenceModifier> modifiers) {
         this.modifiers = modifiers;
     }
-
-    public abstract void initWorldGenSeed(long var1);
+    
+    public abstract void initWorldGenSeed(long par1) ;
 
     public BiomeRandomizer.PickByClimate partitioned(BiomeRandomizer.PickByClimate global, int x, int z) {
-        HashMap<IncidenceModifier, BiomeRandomizer.PickByClimate> grouping = (HashMap)this.calculatedClimates.get(global);
-        if (grouping == null) {
-            grouping = global.modifiedDistributions(this.modifiers);
-            this.calculatedClimates.put(global, grouping);
-        }
+        // get the stored grouping.
+        HashMap<IncidenceModifier,BiomeRandomizer.PickByClimate> grouping =
+                calculatedClimates.get(global);
 
-        return (BiomeRandomizer.PickByClimate)grouping.get(this.modifier(x, z));
+        // if it's null create and store;
+        if (grouping == null) {
+            grouping = global.modifiedDistributions(modifiers);
+            calculatedClimates.put(global, grouping);
+        }
+        return grouping.get(modifier(x,z));
     }
+
+
+
 }

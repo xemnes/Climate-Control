@@ -1,10 +1,13 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
+/*
+ * Available under the Lesser GPL License 3.0
+ */
 
 package climateControl.generator;
 
+/**
+ *
+ * @author Zeno410
+ */
 public interface Decoder {
-    int decode(Integer var1);
+    public int decode(Integer code);
 }

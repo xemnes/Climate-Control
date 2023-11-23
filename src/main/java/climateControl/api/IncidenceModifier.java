@@ -1,13 +1,16 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
+/*
+ * Available under the Lesser GPL License 3.0
+ */
 
 package climateControl.api;
 
 import com.Zeno410Utils.Numbered;
 import net.minecraft.world.biome.Biome;
 
+/**
+ *
+ * @author Zeno410
+ */
 public interface IncidenceModifier {
-    int modifiedIncidence(Numbered<Biome> var1);
+    public int modifiedIncidence(Numbered<Biome> biomeIncidence);
 }
